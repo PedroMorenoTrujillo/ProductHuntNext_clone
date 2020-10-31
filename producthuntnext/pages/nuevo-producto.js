@@ -3,7 +3,8 @@ import Router, { useRouter } from 'next/router';
 import FileUploader from 'react-firebase-file-uploader';
 import { css } from '@emotion/core';
 import Layout from '../components/layouts/Layout';
-import { Formulario, Campo, InputSubmit, Error } from '../components/ui/Formulario'; 
+import { Formulario, Campo, InputSubmit, Error } from '../components/ui/Formulario';
+import Error404 from '../components/layouts/404'; 
 
 // Importar firebase
 import {FirebaseContext} from '../firebase';
@@ -57,7 +58,12 @@ const NuevoProducto = () => {
       descripcion,
       votos: 0,
       comentarios: [],
-      creado: Date.now()
+      creado: Date.now(),
+      creador: {
+        id: usuario.uid,
+        nombre: usuario.displayName
+      },
+      haVotado:[]
     }
 
     // Insertarlo en la base de datos
@@ -94,10 +100,10 @@ const NuevoProducto = () => {
   }
 
 
-
    return (
      <Layout>
-       <>
+       {!usuario ? <Error404 /> : (
+         <>
          <h1 css={css`
             text-align: center;
             margin-top: 5rem;
@@ -193,6 +199,8 @@ const NuevoProducto = () => {
            <InputSubmit type="submit" value="Crear Producto"/>
          </Formulario>
        </>
+       )}
+       
     </Layout>
   )
 }
